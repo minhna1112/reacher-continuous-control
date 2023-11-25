@@ -30,7 +30,7 @@ Follow the instructions in `Continuous_Control.ipynb` to get started with traini
 
 
 ### Quickstart
-
+0. Download the Unity environment: ```bash download_env.sh```
 1. The python environment used in this project is similar to ones used in my [Project I](https://github.com/minhnna1112/banana-dqn-brain), with `torch==2.0.0` and `grpcio==1.53.0`
 2. There will be 2 options to start this notebook on your local machine.
 - Start locally: Run `python3 -m pip install .` in the terminal
