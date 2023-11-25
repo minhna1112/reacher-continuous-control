@@ -52,7 +52,6 @@ I modified the neural architectures of `Actor` and `Critic`, referenced from [An
 - The checkpoint of the actor  is saved in `checkpoint_actor.pth`
 - The checkpoint of the critic is saved in `checkpoint_critic.pth`
 
-
 ###  Future plan:
 - Integrate [wandb](https://wandb.ai/) into training pipeline to have better visualization with different hyper-parameters (epsion, hidden units in the Q-nets).
 - Try experiments with TD3 method [[2]](#2). I have included a placeholder to train a TD3 agent. TD3 is considered to be more effective than DDPG since it does not rely heavily on hyper-parameter tuning. I have adapted a version of the original [TD3](https://github.com/sfujim/TD3/blob/master/TD3.py) in `agent/TD3.py`
