@@ -5,7 +5,7 @@ build:
 	docker build -t ${IMAGE_NAME}:${TAG} .
 
 run:
-	docker run --rm -it -p 8888:8888 -v $(pwd):/workspace ${IMAGE_NAME}:${TAG} /bin/bash
+	docker run --rm --gpus all -p 8888:8888 -v $(pwd):/workspace ${IMAGE_NAME}:${TAG}
 
 all: build
 ifeq ($(RUN),1)

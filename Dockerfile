@@ -7,3 +7,4 @@ COPY setup.py ./setup.py
 
 RUN python3 -m pip install .
 
+CMD ["jupyter", "notebook", "Continuous_Control_solution.ipynb"]
