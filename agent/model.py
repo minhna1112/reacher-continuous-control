@@ -4,25 +4,27 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+
+
 def init_hidden(layer):
     input_size = layer.weight.data.size()[0]
     lim = np.sqrt(1. / input_size)
     return (-lim, lim)
 
-class Actor(nn.Module):
+class ActorNN(nn.Module):
     """Actor (Policy) Model."""
     def __init__(self, input_size, output_size, seed):
-        super(Actor, self).__init__()
+        super(ActorNN, self).__init__()
         self.seed = torch.manual_seed(seed)
-        init_hidden_num = 128
+        hidden_nodes = 128
         self.num_layers = 2
 
-        self.hidden_layers = nn.ModuleList([nn.Linear(input_size, init_hidden_num)])
-        self.bn_layers = nn.ModuleList([nn.BatchNorm1d(num_features=init_hidden_num)])
+        self.hidden_layers = nn.ModuleList([nn.Linear(input_size, hidden_nodes)])
+        self.bn_layers = nn.ModuleList([nn.BatchNorm1d(num_features=hidden_nodes)])
         for i in range(self.num_layers):
-            self.hidden_layers.append(nn.Linear(init_hidden_num*(2**i), init_hidden_num*(2**(i+1))))
-            self.bn_layers.append(nn.BatchNorm1d(num_features=init_hidden_num*(2**(i+1))))
-        self.final_layer = nn.Linear(init_hidden_num*(2**self.num_layers), output_size)
+            self.hidden_layers.append(nn.Linear(hidden_nodes, hidden_nodes))
+            self.bn_layers.append(nn.BatchNorm1d(num_features=hidden_nodes))
+        self.final_layer = nn.Linear(hidden_nodes, output_size)
         self.init_params()
 
     def init_params(self):
@@ -38,12 +40,12 @@ class Actor(nn.Module):
         x = torch.tanh(self.final_layer(x))
         return x
 
-class Critic(nn.Module):
+class CriticNN(nn.Module):
     """Critic (Value) Model."""
     def __init__(self, state_size, action_size, seed):
-        super(Critic, self).__init__()
+        super(CriticNN, self).__init__()
         self.seed = torch.manual_seed(seed)
-        init_hidden_num = 128
+        hidden_nodes = 128
         self.num_layers = 2
         input_size = state_size + action_size
         output_size = 1
@@ -53,10 +55,10 @@ class Critic(nn.Module):
         self.state_linear_layer = nn.Linear(state_size, state_size)
 
         #hidden layers
-        self.hidden_layers = nn.ModuleList([nn.Linear(input_size, init_hidden_num)])
+        self.hidden_layers = nn.ModuleList([nn.Linear(input_size, hidden_nodes)])
         for i in range(self.num_layers):
-            self.hidden_layers.append(nn.Linear(init_hidden_num*(2**i), init_hidden_num*(2**(i+1))))
-        self.final_layer = nn.Linear(init_hidden_num*(2**self.num_layers), output_size)
+            self.hidden_layers.append(nn.Linear(hidden_nodes, hidden_nodes))
+        self.final_layer = nn.Linear(hidden_nodes, output_size)
 
         self.init_params()
 
@@ -73,7 +75,7 @@ class Critic(nn.Module):
 
     def forward(self, state, action):
         norm_state = self.norm_state_layer(state)
-        x = torch.cat((norm_state, action), dim=1)
+        x = torch.cat((norm_state, action), dim=-1)
         for i in range(len(self.hidden_layers)):
             x = torch.relu(self.hidden_layers[i](x))
         x = self.final_layer(x)
