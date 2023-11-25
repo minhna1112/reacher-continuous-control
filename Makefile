@@ -6,3 +6,8 @@ build:
 
 run:
 	docker run --rm -it -p 8888:8888 -v $(pwd):/workspace ${IMAGE_NAME}:${TAG} /bin/bash
+
+all: build
+ifeq ($(RUN),1)
+	@$(MAKE) run
+endif
